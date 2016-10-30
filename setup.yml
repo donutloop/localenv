@@ -1,0 +1,68 @@
+- hosts: localhost
+ 
+  tasks:
+ 
+  - name: Repositories
+    apt_repository: 
+      repo:  ppa:webupd8team/java 
+      state: present  
+ 
+  - name: Update cache 
+    apt:
+      update_cache: yes
+ 
+  - name: Dist upgrade
+    apt:
+      upgrade: dist
+ 
+  - name: Install pacakges 
+    apt:  
+      name: "{{ item }}" 
+      state: latest
+    with_items:
+       - oracle-java8-installer
+       - xclip
+       - apache2
+       - libapache2-mod-php7.0
+       - mysql-server 
+       - mysql-client
+       - php7.0-mysql 
+       - php7.0-curl
+       - php7.0-json
+       - php-gettext 
+       - php7.0-mbstring
+       - php-xdebug
+       - phpmyadmin
+       - git 
+       - golang
+       - libxss1
+       - libappindicator1
+       - libindicator7
+       - docker
+       - gdb
+ 
+  - name: Download latest chrome installer 
+    get_url:
+      url: https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+      dest: /tmp/chrome.deb 
+  
+  - name: Install chrome
+    apt:
+      deb: /tmp/chrome.deb
+  
+  - name: Create workspace
+    file: 
+       path: /home/user/workspace 
+       state: directory
+
+  - name: Create worspace sub folder
+    file: 
+      path: /home/user/workspace/{{ item }}
+      state: directory  
+    with_items:
+      - go
+      - php 
+      - ansible 
+      - python 
+      - docker
+
