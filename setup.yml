@@ -55,7 +55,7 @@
       remote_src: true
     with_items:
       - ['https://download.jetbrains.com/webide/PhpStorm-2016.2.2.tar.gz', '/opt/phpstorm']
-      - ['https://download.jetbrains.com/python/pycharm-community-2016.2.3.tar.gz', 'pycharm' ]
+      - ['https://download.jetbrains.com/python/pycharm-community-2016.2.3.tar.gz', '/opt/pycharm' ]
 
   - name: Install chrome
     apt:
