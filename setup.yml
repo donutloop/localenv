@@ -22,8 +22,8 @@
     with_items:
        - oracle-java8-installer
        - xclip
-       - apache2
-       - libapache2-mod-php7.0
+       - nginx
+       - php7-fpm
        - mysql-server 
        - mysql-client
        - php7.0-mysql 
@@ -41,14 +41,28 @@
        - docker
        - gdb
  
-  - name: Download latest chrome installer 
+  - name: Download latest software installer 
     get_url:
-      url: https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
-      dest: /tmp/chrome.deb 
-  
+      url: {{ item[0] }}
+      dest: /tmp/{{ item[1] }} 
+    with_items: 
+      - ['https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb', 'chrome.deb']    
+ 
+  - name: Download software installer
+    unarchive:
+      dest: "{ item[0] }}"
+      src: "{{ item[1] }}"
+      remote_src: true
+    with_items:
+      - ['https://download.jetbrains.com/webide/PhpStorm-2016.2.2.tar.gz', '/opt/phpstorm']
+      - ['https://download.jetbrains.com/python/pycharm-community-2016.2.3.tar.gz', 'pycharm' ]
+
   - name: Install chrome
     apt:
       deb: /tmp/chrome.deb
+
+  - name: install Oh my zsh
+    shell: sh -c "$(curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
   
   - name: Create workspace
     file: 
@@ -65,4 +79,13 @@
       - ansible 
       - python 
       - docker
-
+  
+  - name: Configure Ngnix 
+    lineinfile:
+       dest: /etc/php/7.0/fpm/php.ini
+       state: absent 
+       regexp: "cgi\.fix_pathinfo\=1"
+  - lineinfile: 
+      dest: /etc/php/7.0/fpm/php.ini
+      line: "cgi.fix_pathinfo=0"
+ 	
