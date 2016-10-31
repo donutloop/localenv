@@ -43,7 +43,7 @@
  
   - name: Download latest software installer 
     get_url:
-      url: {{ item[0] }}
+      url: "{{ item[0] }}"
       dest: /tmp/{{ item[1] }} 
     with_items: 
       - ['https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb', 'chrome.deb']    
@@ -81,11 +81,8 @@
       - docker
   
   - name: Configure Ngnix 
-    lineinfile:
-       dest: /etc/php/7.0/fpm/php.ini
-       state: absent 
-       regexp: "cgi\.fix_pathinfo\=1"
-  - lineinfile: 
-      dest: /etc/php/7.0/fpm/php.ini
-      line: "cgi.fix_pathinfo=0"
- 	
+    replace:
+       dest: /etc/php/7.0/fpm/php.ini 
+       regexp: 'cgi\.fix_pathinfo=1'
+       replace: 'cgi.fix_pathinfo=0'
+ 
