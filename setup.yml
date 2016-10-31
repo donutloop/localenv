@@ -46,7 +46,8 @@
       url: "{{ item[0] }}"
       dest: /tmp/{{ item[1] }} 
     with_items: 
-      - ['https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb', 'chrome.deb']    
+      - ['https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb', 'chrome.deb']
+      - ['https://downloads.slack-edge.com/linux_releases/slack-desktop-2.2.1-amd64.deb', 'slack.deb']    
  
   - name: Download software installer
     unarchive:
@@ -60,6 +61,9 @@
   - name: Install chrome
     apt:
       deb: /tmp/chrome.deb
+    with_items:
+      - chrome.deb
+      - slack.deb
 
   - name: install Oh my zsh
     shell: sh -c "$(curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
