@@ -1,5 +1,6 @@
 - hosts: localhost
- 
+  remote_user: user
+
   tasks:
  
   - name: Repositories
@@ -35,7 +36,7 @@
        - php-gettext 
        - php7.0-mbstring
        - php-xdebug
-       - phpmyadmin
+       - mysql-workbench
        - git 
        - golang
        - libxss1
@@ -59,8 +60,9 @@
        state: directory
     with_items:
        - /opt/phpstorm
-       - /opt/pycharm 	
+       - /opt/pycharm
 
+# Todo: fix it before you reinstall again ubuntu (Ansible to old)
 #  - name: Download software installer
 #    unarchive:
 #      dest: "{{ item.dir }}"
@@ -77,18 +79,23 @@
       - chrome.deb
       - slack.deb
 
-  - name: install Oh my zsh
-    shell: sh -c "$(curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
+ # Todo: ssh sudo issue, fix it before you reinstall again ubuntu (https://github.com/RaymiiOrg/ansible/blob/master/oh-my-zsh/ohmyzsh.yml)
+ # - name: install Oh my zsh
+ #  shell: sh -c "$(curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
   
   - name: Create workspace
     file: 
        path: /home/user/workspace 
        state: directory
+       group: user
+       owner: user
 
   - name: Create worspace sub folder
     file: 
       path: /home/user/workspace/{{ item }}
-      state: directory  
+      state: directory
+      group: user
+      owner: user
     with_items:
       - go
       - php 
