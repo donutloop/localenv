@@ -14,6 +14,9 @@
   - name: Dist upgrade
     apt:
       upgrade: dist
+  
+  - name: Accept Java 8 License
+    debconf: name='oracle-java8-installer' question='shared/accepted-oracle-license-v1-1' value='true' vtype='select'
  
   - name: Install pacakges 
     apt:  
@@ -23,7 +26,7 @@
        - oracle-java8-installer
        - xclip
        - nginx
-       - php7-fpm
+       - php7.0-fpm
        - mysql-server 
        - mysql-client
        - php7.0-mysql 
@@ -40,27 +43,36 @@
        - libindicator7
        - docker
        - gdb
+       - vim 
  
   - name: Download latest software installer 
     get_url:
-      url: "{{ item[0] }}"
-      dest: /tmp/{{ item[1] }} 
+      url: "{{ item.url }}"
+      dest: /tmp/{{ item.file }} 
     with_items: 
-      - ['https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb', 'chrome.deb']
-      - ['https://downloads.slack-edge.com/linux_releases/slack-desktop-2.2.1-amd64.deb', 'slack.deb']    
- 
-  - name: Download software installer
-    unarchive:
-      dest: "{ item[0] }}"
-      src: "{{ item[1] }}"
-      remote_src: true
+      - {url: 'https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb', file: 'chrome.deb'}
+      - {url: 'https://downloads.slack-edge.com/linux_releases/slack-desktop-2.2.1-amd64.deb', file: 'slack.deb'}    
+
+  - name: Create folders for IDEs
+    file: 
+       path: "{{ item }}"
+       state: directory
     with_items:
-      - ['https://download.jetbrains.com/webide/PhpStorm-2016.2.2.tar.gz', '/opt/phpstorm']
-      - ['https://download.jetbrains.com/python/pycharm-community-2016.2.3.tar.gz', '/opt/pycharm' ]
+       - /opt/phpstorm
+       - /opt/pycharm 	
+
+#  - name: Download software installer
+#    unarchive:
+#      dest: "{{ item.dir }}"
+#      src: "{{ item.url }}"
+#      remote_src: yes
+#    with_items:
+#      - {url: 'https://download.jetbrains.com/webide/PhpStorm-2016.2.2.tar.gz',  dir: '/opt/phpstorm'}
+#      - {url: 'https://download.jetbrains.com/python/pycharm-community-2016.2.3.tar.gz', dir: '/opt/pycharm'}
 
   - name: Install chrome
     apt:
-      deb: /tmp/chrome.deb
+      deb: /tmp/{{ item }}
     with_items:
       - chrome.deb
       - slack.deb
