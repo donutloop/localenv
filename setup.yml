@@ -42,7 +42,7 @@
        - libxss1
        - libappindicator1
        - libindicator7
-       - docker
+       - docker.io
        - gdb
        - vim 
  
